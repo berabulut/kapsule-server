@@ -5,6 +5,7 @@ services:
     build: "./kapsule"
     ports:
       - "8080"
+      - "8081"
   client:
     build: "./kapsule-ui"
     ports:
