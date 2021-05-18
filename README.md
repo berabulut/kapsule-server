@@ -12,5 +12,11 @@ git clone https://github.com/berabulut/kapsule.git
 ## Deploy
 
 ```
-sh build.sh
+sudo sh build.sh
+```
+
+## Create SSL Certificate
+
+```
+sudo ./init-letsencrypt.sh
 ```
