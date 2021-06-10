@@ -37,12 +37,9 @@ func HookHandler(folder string) (http.HandlerFunc) {
 		}
 
 		if body.PR.Merged {
-			command := fmt.Sprintf("./pull.sh %s", folder)
-			cmd, err := exec.Command(command).Output()
-		
-			if err != nil {
-				log.Fatal(err)
-			}			
+			//command := fmt.Sprintf("./build.sh %s", folder)
+			//cmd, err := exec.Command("./build.sh", folder).Output()
+			go executeScript(folder)
 		} 
 
 		output, err := json.Marshal(body)
@@ -56,7 +53,15 @@ func HookHandler(folder string) (http.HandlerFunc) {
 	}
 }
 
-func executeCommand ()
+func executeScript (folder string){
+	cmd, err := exec.Command("./build.sh", folder).CombinedOutput()
+	output := string(cmd)
+	fmt.Println(output)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func main() {
 	address := ":4043"

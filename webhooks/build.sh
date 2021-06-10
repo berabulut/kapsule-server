@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -14,7 +14,6 @@ else
     git pull
     cd .. 
     sh build.sh
-
 fi
 
 
