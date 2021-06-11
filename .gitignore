@@ -1,3 +1,4 @@
 /kapsule
 /kapsule-ui
 /certbot
+**/webhooks-server
