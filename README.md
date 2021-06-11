@@ -22,3 +22,10 @@ sudo ./init-letsencrypt.sh
 sudo sh build.sh
 ```
 
+## Automatic Update & Build 
+
+```
+cd webhooks
+./build.sh
+```
+

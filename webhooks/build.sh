@@ -1,19 +1,5 @@
-#!/bin/bash
+sudo kill -9 `sudo lsof -t -i:4043`
 
-set -e
-
-
-if [ $1 == "kapsule-server" ]; then
-    cd ../
-    git pull
-    sh build.sh
-
-else
-    echo "cd ../$1"
-    cd ../$1
-    git pull
-    cd .. 
-    sh build.sh
-fi
-
+go build
+./webhooks &disown
 

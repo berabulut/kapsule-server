@@ -18,7 +18,7 @@ type PullRequest struct {
 	Merged bool `json:"merged"`
 }
 
-func HookHandler(folder string) (http.HandlerFunc) { 
+func HookHandler(folder string) http.HandlerFunc {
 	// Read body
 	return func(w http.ResponseWriter, r *http.Request) {
 		b, err := ioutil.ReadAll(r.Body)
@@ -40,7 +40,7 @@ func HookHandler(folder string) (http.HandlerFunc) {
 			//command := fmt.Sprintf("./build.sh %s", folder)
 			//cmd, err := exec.Command("./build.sh", folder).Output()
 			go executeScript(folder)
-		} 
+		}
 
 		output, err := json.Marshal(body)
 		if err != nil {
@@ -53,8 +53,8 @@ func HookHandler(folder string) (http.HandlerFunc) {
 	}
 }
 
-func executeScript (folder string){
-	cmd, err := exec.Command("./build.sh", folder).CombinedOutput()
+func executeScript(folder string) {
+	cmd, err := exec.Command("./update.sh", folder).CombinedOutput()
 	output := string(cmd)
 	fmt.Println(output)
 
@@ -69,11 +69,11 @@ func main() {
 	http.HandleFunc("/kapsule", HookHandler("kapsule"))
 	http.HandleFunc("/kapsule-ui", HookHandler("kapsule-ui"))
 	http.HandleFunc("/kapsule-server", HookHandler("kapsule-server"))
-	
+
 	log.Println("Starting server on address", address)
-	
+
 	err := http.ListenAndServe(address, nil)
-	
+
 	if err != nil {
 		panic(err)
 	}
