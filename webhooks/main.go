@@ -9,14 +9,23 @@ import (
 	"os/exec"
 )
 
+const ActionJobName = "build-and-push"
+
 type WebHook struct {
-	Ref string      `json:"ref"`
-	PR  PullRequest `json:"pull_request"`
+	Ref      string   `json:"ref"`
+	CheckRun CheckRun `json:"check_run"`
+	// PR       PullRequest `json:"pull_request"`
 }
 
-type PullRequest struct {
-	Merged bool `json:"merged"`
+type CheckRun struct {
+	Action     string `json:"action"`
+	Name       string `json:"name"`
+	Conclusion string `json:"conclusion"`
 }
+
+// type PullRequest struct {
+// 	Merged bool `json:"merged"`
+// }
 
 func HookHandler(folder string) http.HandlerFunc {
 	// Read body
@@ -36,7 +45,7 @@ func HookHandler(folder string) http.HandlerFunc {
 			return
 		}
 
-		if body.PR.Merged {
+		if body.CheckRun.Action == "completed" && body.CheckRun.Conclusion == "success" && body.CheckRun.Name == ActionJobName {
 			//command := fmt.Sprintf("./build.sh %s", folder)
 			//cmd, err := exec.Command("./build.sh", folder).Output()
 			go executeScript(folder)
