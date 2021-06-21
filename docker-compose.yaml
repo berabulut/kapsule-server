@@ -2,12 +2,12 @@
 version: "3.6"
 services:
   service:
-    build: "./kapsule"
+    image: kapsule-service:latest
     ports:
       - "8080"
       - "8081"
   client:
-    build: "./kapsule-ui"
+    image: kapsule-ui:latest
     ports:
       - "3000"
   nginx:

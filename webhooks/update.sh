@@ -12,13 +12,9 @@ if [ $1 == "kapsule-server" ]; then
     fi
 
 else
-    cd ../$1
-
-    PULL=`git pull`
-    if [ "$PULL" != "Already up to date." ]; then
-        cd .. 
-        sh build.sh
-    fi
+    #cd ../$1
+    cd .. 
+    sh build.sh
 fi
 
 
