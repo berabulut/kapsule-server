@@ -11,7 +11,7 @@ fi
 # install python
 PYTHON_VERSION=`python3 --version`
 
-if [ $PYTHON_VERSION == *"Python 3.8"* ]; then
+if [[ $PYTHON_VERSION == *"Python 3.8"* ]]; then
 	echo "Python is already installed"
 else
     echo "Installing Python"
