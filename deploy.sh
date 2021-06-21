@@ -7,7 +7,7 @@ if [ -f .env ]; then
     export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
 fi
 
-sudo ./aws-config.sh
+./aws-config.sh
 
 # get ECR credentials for docker pull
 echo "Logging into AWS ECR"
