@@ -7,17 +7,24 @@ if [ -f .env ]; then
     export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
 fi
 
+
 # install python
-sudo apt update
-sudo apt install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install python3.8
-python3 --version
-sudo apt install python3-pip
+PYTHON_VERSION=`python3 --version`
+
+if [ $PYTHON_VERSION == *"Python 3.8"* ]; then
+	echo "Python is already installed"
+else
+    sudo apt update
+    sudo apt install software-properties-common -y
+    sudo add-apt-repository ppa:deadsnakes/ppa -y
+    sudo apt update
+    sudo apt install python3.8 -y
+    python3 --version
+    sudo apt install python3-pip -y
+fi
 
 # install aws-cli
-sudo python3 -m pip install awscli
+sudo python3 -m pip install awscli -y
 
 # configure aws-cli 
 echo "[default]" >|  ~/.aws/credentials

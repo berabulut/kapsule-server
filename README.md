@@ -20,7 +20,7 @@ OUTPUT_FORMAT=json
 
 ### Configure AWS CLI
 
-`sh aws-config.sh`
+`sudo ./aws-config.sh`
 
 ## Create SSL Certificate
 
