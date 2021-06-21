@@ -26,7 +26,7 @@ fi
 
 # install aws-cli
 echo "Installing AWS CLI"
-sudo python3 -m pip install awscli -y
+yes | sudo python3 -m pip install awscli 
 
 # configure aws-cli 
 echo "[default]" >|  ~/.aws/credentials
