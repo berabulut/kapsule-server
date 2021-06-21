@@ -8,13 +8,13 @@ if [ $1 == "kapsule-server" ]; then
 
     PULL=`git pull`
     if [ "$PULL" != "Already up to date." ]; then
-        ./deploy.sh
+        sh deploy.sh
     fi
 
 else
     #cd ../$1
     cd .. 
-    ./deploy.sh
+    sh deploy.sh
 fi
 
 
