@@ -10,4 +10,4 @@ Listens **kapsule**, **kapsule-ui** and **kapsule-server** repos. When there is 
 
 - Deployment
 
-	`./build.sh`
+	`./deploy.sh`

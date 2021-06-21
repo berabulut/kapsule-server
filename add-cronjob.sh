@@ -1,0 +1,1 @@
+(crontab -l 2>/dev/null || true; echo "*/5 * * * *    cd /home/ubuntu/kapsule-server/webhooks ; ./alive.sh") | crontab -

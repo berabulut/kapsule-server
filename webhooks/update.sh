@@ -4,17 +4,17 @@ set -e
 
 
 if [ $1 == "kapsule-server" ]; then
-    cd ../
+    cd ..
 
     PULL=`git pull`
     if [ "$PULL" != "Already up to date." ]; then
-        sh build.sh
+        ./deploy.sh
     fi
 
 else
     #cd ../$1
     cd .. 
-    sh build.sh
+    ./deploy.sh
 fi
 
 
