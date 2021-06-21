@@ -14,6 +14,7 @@ PYTHON_VERSION=`python3 --version`
 if [ $PYTHON_VERSION == *"Python 3.8"* ]; then
 	echo "Python is already installed"
 else
+    echo "Installing Python"
     sudo apt update
     sudo apt install software-properties-common -y
     sudo add-apt-repository ppa:deadsnakes/ppa -y
@@ -24,6 +25,7 @@ else
 fi
 
 # install aws-cli
+echo "Installing AWS CLI"
 sudo python3 -m pip install awscli -y
 
 # configure aws-cli 

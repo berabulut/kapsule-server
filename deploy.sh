@@ -7,9 +7,10 @@ if [ -f .env ]; then
     export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
 fi
 
-./aws-config.sh
+sudo ./aws-config.sh
 
 # get ECR credentials for docker pull
+echo "Logging into AWS ECR"
 aws --region ${AWS_DEFAULT_REGION} ecr get-login-password \
     | docker login \
         --password-stdin \
@@ -18,6 +19,7 @@ aws --region ${AWS_DEFAULT_REGION} ecr get-login-password \
 
 
 # pull latest images
+echo "Pulling images!"
 docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/kapsule/kapsule-ui:latest
 docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/kapsule/kapsule-service:latest
 
