@@ -2,3 +2,4 @@
 /kapsule-ui
 /certbot
 **/webhooks-server
+.env
