@@ -13,12 +13,12 @@ const ActionJobName = "build-and-push"
 
 type WebHook struct {
 	Ref      string   `json:"ref"`
+	Action   string   `json:"action"`
 	CheckRun CheckRun `json:"check_run"`
 	// PR       PullRequest `json:"pull_request"`
 }
 
 type CheckRun struct {
-	Action     string `json:"action"`
 	Name       string `json:"name"`
 	Conclusion string `json:"conclusion"`
 }
@@ -45,7 +45,7 @@ func HookHandler(folder string) http.HandlerFunc {
 			return
 		}
 
-		if body.CheckRun.Action == "completed" && body.CheckRun.Conclusion == "success" && body.CheckRun.Name == ActionJobName {
+		if body.Action == "completed" && body.CheckRun.Conclusion == "success" && body.CheckRun.Name == ActionJobName {
 			//command := fmt.Sprintf("./build.sh %s", folder)
 			//cmd, err := exec.Command("./build.sh", folder).Output()
 			go executeScript(folder)
