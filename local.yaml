@@ -1,3 +1,4 @@
+
 version: "3.6"
 services:
   grafana:
@@ -10,10 +11,11 @@ services:
     volumes:
       - grafana-storage:/var/lib/grafana
   service:
-    image: kapsule-service:latest
+    build: ./kapsule
+    container_name: kapsule-service
     ports:
-      - "8080"
-      - "8081"
+      - "8080:8080"
+      - "8081:8081"
   prometheus:
     image: prom/prometheus:v2.24.0
     container_name: prometheus
@@ -29,29 +31,18 @@ services:
       - 9090:9090
     restart: always
   client:
-    image: kapsule-ui:latest
+    build: ./kapsule-ui
+    container_name: kapsule-ui
     ports:
-      - "3000"
+      - "3000:3000"
   nginx:
     image: nginx:1.15-alpine
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+    container_name: kapsule-nginx
     ports:
       - "80:80"
-      - "443:443"
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - "service"
       - "client"
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 volumes:
   grafana-storage: {}
   prometheus_data: {}

@@ -3,3 +3,5 @@
 /certbot
 **/webhooks-server
 .env
+
+.idea
