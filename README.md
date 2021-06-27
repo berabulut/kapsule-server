@@ -2,6 +2,13 @@
 
 Deployment project and server of kapsule.
 
+## Local Development
+
+```
+docker-compose -f local.yaml build
+docker-compose -f local.yaml up
+```
+
 ## Set up
 
 ### Create .env file

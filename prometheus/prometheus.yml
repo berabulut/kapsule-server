@@ -10,9 +10,9 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets:
-        - service:8080
+        - kapsule-api:8080
   - job_name: kapsule-redirect
     metrics_path: /metrics
     static_configs:
       - targets:
-        - service:8081
+        - kapsule-redirect:8080

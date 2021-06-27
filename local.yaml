@@ -1,21 +1,29 @@
 
 version: "3.6"
 services:
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
+
+  kapsule-api:
+    build:
+      context: ./kapsule
+      dockerfile: Dockerfile-api
+    container_name: kapsule-api
     ports:
-      - "3005:3000"
-    environment:
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel
-    volumes:
-      - grafana-storage:/var/lib/grafana
-  service:
-    build: ./kapsule
-    container_name: kapsule-service
+      - 8080:8080
+  
+  kapsule-redirect:
+    build:
+      context: ./kapsule
+      dockerfile: Dockerfile-redirect
+    container_name: kapsule-redirect
     ports:
-      - "8080:8080"
-      - "8081:8081"
+      - 8081:8080
+  
+  client:
+    build: ./kapsule-ui
+    container_name: kapsule-ui
+    ports:
+      - 3000:3000
+  
   prometheus:
     image: prom/prometheus:v2.24.0
     container_name: prometheus
@@ -28,21 +36,35 @@ services:
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
     ports:
-      - 9090:9090
+      - "9090"
     restart: always
-  client:
-    build: ./kapsule-ui
-    container_name: kapsule-ui
+  
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
     ports:
-      - "3000:3000"
+      - 3005:3000
+    depends_on:
+      - "prometheus"
+    env_file:
+      - ./grafana/config.monitoring
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    restart: always
+  
   nginx:
     image: nginx:1.15-alpine
-    container_name: kapsule-nginx
+    container_name: nginx
     ports:
-      - "80:80"
+      - 80:80
     depends_on:
-      - "service"
+      - "kapsule-api"
+      - "kapsule-redirect"
       - "client"
+
 volumes:
   grafana-storage: {}
   prometheus_data: {}
