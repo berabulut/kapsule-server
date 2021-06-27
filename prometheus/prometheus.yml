@@ -3,16 +3,25 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
+
   - job_name: prometheus
     static_configs:
       - targets: ['localhost:9090']
+  
   - job_name: kapsule-api 
     metrics_path: /metrics
     static_configs:
       - targets:
         - kapsule-api:8080
+  
   - job_name: kapsule-redirect
     metrics_path: /metrics
     static_configs:
       - targets:
         - kapsule-redirect:8080
+  
+  - job_name: nginx
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+        - nginx-exporter:9113

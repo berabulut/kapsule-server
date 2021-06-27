@@ -57,6 +57,8 @@ services:
   
   nginx:
     image: nginx:1.15-alpine
+    volumes:
+      - ./test:/etc/nginx/conf.d
     container_name: nginx
     ports:
       - 80:80
@@ -64,6 +66,17 @@ services:
       - "kapsule-api"
       - "kapsule-redirect"
       - "client"
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter
+    command:
+      - '-nginx.scrape-uri=http://nginx:80/stub_status' 
+    container_name: nginx-exporter
+    ports: 
+      - 9113:9113
+    depends_on:
+      - "nginx"
+       
 
 volumes:
   grafana-storage: {}
