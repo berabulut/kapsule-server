@@ -1,21 +1,5 @@
 version: "3.6"
 services:
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3000"
-    environment:
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel
-    volumes:
-      - grafana-storage:/var/lib/grafana
-  
-  service:
-    image: kapsule-service:latest
-    ports:
-      - "8080"
-      - "8081"
       
   kapsule-api:
     image: kapsule-api:latest
@@ -29,6 +13,11 @@ services:
     ports:
       - "8080"
   
+  client:
+    image: kapsule-ui:latest
+    ports:
+      - "3000"
+  
   prometheus:
     image: prom/prometheus:v2.24.0
     container_name: prometheus
@@ -41,13 +30,25 @@ services:
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
     ports:
-      - 9090:9090
+      - "9090"
     restart: always
   
-  client:
-    image: kapsule-ui:latest
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
     ports:
-      - "3000"
+      - 3005:3000
+    depends_on:
+      - "prometheus"
+    env_file:
+      - ./.env
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    restart: always
+ 
   
   nginx:
     image: nginx:1.15-alpine
@@ -60,8 +61,19 @@ services:
       - "443:443"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
-      - "service"
+      - "kapsule-api"
+      - "kapsule-redirect"
       - "client"
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter
+    command:
+      - '-nginx.scrape-uri=http://nginx:80/stub_status' 
+    container_name: nginx-exporter
+    ports: 
+      - "9113"
+    depends_on:
+      - "nginx"
   
   certbot:
     image: certbot/certbot
@@ -70,6 +82,7 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
 
 volumes:
   grafana-storage: {}

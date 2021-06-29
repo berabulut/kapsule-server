@@ -47,7 +47,7 @@ services:
     depends_on:
       - "prometheus"
     env_file:
-      - ./grafana/config.monitoring
+      - ./.env
     environment:
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
     volumes:
