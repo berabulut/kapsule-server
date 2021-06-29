@@ -2,6 +2,15 @@
 
 Deployment project and server of kapsule.
 
+## Structure
+
+![structure](./structure.png)
+
+## CI / CD
+
+![structure](./ci-cd.png)
+
+
 ## Local Development
 
 ```
