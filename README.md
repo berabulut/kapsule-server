@@ -2,6 +2,13 @@
 
 Deployment project and server of kapsule.
 
+## Local Development
+
+```
+docker-compose -f local.yaml build
+docker-compose -f local.yaml up
+```
+
 ## Set up
 
 ### Create .env file
@@ -16,6 +23,11 @@ AWS_SECRET_ACCESS_KEY=
 AWS_ACCOUNT_ID=
 AWS_DEFAULT_REGION=eu-central-1
 OUTPUT_FORMAT=json
+
+WEBHOOKS_SERVER_PORT=
+
+GF_SECURITY_ADMIN_PASSWORD=
+GF_USERS_ALLOW_SIGN_UP=false
 ```
 
 ### Configure AWS CLI

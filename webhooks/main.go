@@ -6,7 +6,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
+
+	"github.com/joho/godotenv"
 )
 
 const ActionJobName = "build-and-push"
@@ -27,6 +30,11 @@ type CheckRun struct {
 // 	Merged bool `json:"merged"`
 // }
 
+func init() {
+	if err := godotenv.Load("../.env"); err != nil {
+		panic(err)
+	}
+}
 func HookHandler(folder string) http.HandlerFunc {
 	// Read body
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -63,6 +71,7 @@ func HookHandler(folder string) http.HandlerFunc {
 }
 
 func executeScript(folder string) {
+
 	cmd, err := exec.Command("./update.sh", folder).CombinedOutput()
 	output := string(cmd)
 	fmt.Println(output)
@@ -70,10 +79,12 @@ func executeScript(folder string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }
 
 func main() {
-	address := ":4043"
+
+	address := fmt.Sprintf(":%s", os.Getenv("WEBHOOKS_SERVER_PORT"))
 
 	http.HandleFunc("/kapsule", HookHandler("kapsule"))
 	http.HandleFunc("/kapsule-ui", HookHandler("kapsule-ui"))

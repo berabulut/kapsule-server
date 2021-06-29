@@ -1,22 +1,28 @@
+
 version: "3.6"
 services:
-      
+
   kapsule-api:
-    image: kapsule-api:latest
+    build:
+      context: ./kapsule
+      dockerfile: Dockerfile-api
     container_name: kapsule-api
     ports:
-      - "8080"
+      - 8080:8080
   
   kapsule-redirect:
-    image: kapsule-redirect:latest
+    build:
+      context: ./kapsule
+      dockerfile: Dockerfile-redirect
     container_name: kapsule-redirect
     ports:
-      - "8080"
+      - 8081:8080
   
   client:
-    image: kapsule-ui:latest
+    build: ./kapsule-ui
+    container_name: kapsule-ui
     ports:
-      - "3000"
+      - 3000:3000
   
   prometheus:
     image: prom/prometheus:v2.24.0
@@ -48,18 +54,14 @@ services:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     restart: always
- 
   
   nginx:
     image: nginx:1.15-alpine
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      - ./test:/etc/nginx/conf.d
+    container_name: nginx
     ports:
-      - "80:80"
-      - "443:443"
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+      - 80:80
     depends_on:
       - "kapsule-api"
       - "kapsule-redirect"
@@ -71,18 +73,10 @@ services:
       - '-nginx.scrape-uri=http://nginx:80/stub_status' 
     container_name: nginx-exporter
     ports: 
-      - "9113"
+      - 9113:9113
     depends_on:
       - "nginx"
-  
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
+       
 
 volumes:
   grafana-storage: {}
