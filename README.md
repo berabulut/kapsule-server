@@ -59,7 +59,7 @@ sh deploy.sh
 Add this to end of file.
 
 ```
-*/5 * * * *  cd /home/ubuntu/kapsule-server/webhooks ; sh alive.sh
+*/5 * * * *  cd /home/ubuntu/kapsule-server/webhooks ; ./alive.sh
 ```
 
 This cron job executes a script (every five minutes) that checks our webhooks server is alive or not. If it's dead it restarts it.
