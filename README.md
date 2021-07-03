@@ -1,6 +1,26 @@
-# kapsule-server
+<h1 >kapsule-server</h1>
 
-Deployment project and server of kapsule.
+<div align="center">
+  <img src="https://github.com/berabulut/kapsule/blob/main/web/static/logo.png?raw=true" alt="kapsule" />
+  <h3>
+    <a href="https://kapsule.click/"  target="_blank">
+      Live
+    </a>
+    <span> | </span>
+    <a href="https://github.com/berabulut/kapsule-ui"  target="_blank">
+      kapsule-ui
+     </a>
+    <span> | </span>
+    <a href="https://github.com/berabulut/kapsule"  target="_blank">
+      kapsule
+    </a>
+  </h3><br>
+  Deployment project of 
+      <a href="https://github.com/berabulut/kapsule" rel="noopener noreferrer" target="_blank">
+      kapsule
+    </a> 
+</div>
+
 
 ## Structure
 
@@ -56,6 +76,10 @@ sh deploy.sh
 ```
 
 ## Automatic Update & Build
+
+It basically is a web server that listens [kapsule](https://github.com/berabulut/kapsule), [kapsule-ui](https://github.com/berabulut/kapsule-ui) and this repo. If there are changes web server executes a shell script that deploys application after getting updates.
+
+[**Details**](https://github.com/berabulut/kapsule-server/tree/main/webhooks)
 
 ### Set a cron job on Ubuntu instance
 

@@ -39,17 +39,17 @@ type PullRequest struct {
 
 func init() {
 
-	// Open log file, create if it doesn't exist
+	// Open log file, create if it doesn't exist.
 	f, err = os.OpenFile("/tmp/webhooks.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
 
-	// Set write logs to log file
+	// Set write logs to log file.
 	wrt := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(wrt)
 
-	// Load environment variables
+	// Load environment variables.
 	if err := godotenv.Load("../.env"); err != nil {
 		log.Fatal(err)
 	}
@@ -108,7 +108,7 @@ func HookHandler(folder string) http.HandlerFunc {
 // Run deployment script while respecting deployment queue.
 func executeScript() {
 
-	// We will wait until previous deployment finish
+	// We will wait until previous deployment finish.
 	for ongoingDeployment() {
 		log.Println("Waiting end of current deployment!")
 		time.Sleep(time.Second)
@@ -140,7 +140,7 @@ func main() {
 
 	log.Println("Starting server on address", address)
 
-	// Close log file
+	// Close log file.
 	defer f.Close()
 
 	err := http.ListenAndServe(address, nil)

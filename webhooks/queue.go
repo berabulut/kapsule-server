@@ -1,12 +1,12 @@
 package main
 
-// resp is deployment_status
+// Resp is deployment_status.
 type readOp struct {
 	resp chan bool
 }
 
-// deployment_status is true when there is an ongoing deployment
-// resp is whether writing is successfull or not
+// Deployment_status is true when there is an ongoing deployment.
+// Resp is whether writing is successfull or not.
 type writeOp struct {
 	deployment_status bool
 	resp              chan bool
@@ -23,7 +23,7 @@ func init() {
 	reads = make(chan readOp)
 	writes = make(chan writeOp)
 
-	// read and write deployment status
+	// Read and write deployment status.
 	go func() {
 		var state = false
 		for {

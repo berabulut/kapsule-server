@@ -1,6 +1,24 @@
 # webhooks-server
 
-Listens **kapsule**, **kapsule-ui** and **kapsule-server** repos. When there is a merged pull request, server executes a shell script that pulls and builds related repo. 
+Listens [kapsule](https://github.com/berabulut/kapsule), [kapsule-ui](https://github.com/berabulut/kapsule-ui) and [kapsule-server](https://github.com/berabulut/kapsule-server). 
+
+Deployment conditions:
+
+- kapsule:
+
+	- When a GitHub action succeeds (Currently there is only one GH Action)
+	- Commit message in main branch that includes "@[build]"
+
+- kapsule-ui:
+
+	- When a GitHub action succeeds (Currently there is only one GH Action)
+	- Commit message in main branch that includes "@[build]"
+
+- kapsule-server:
+
+	- Merged Pull Request
+
+
 
 ## How To Run
 
