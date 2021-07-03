@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e
 
 if [ -f ../.env ]; then
     # Load Environment Variables

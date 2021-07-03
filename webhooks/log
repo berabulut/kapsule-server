@@ -1,0 +1,5 @@
+2021/07/03 12:28:04 Starting server on address :4040
+2021/07/03 12:29:22 kapsule-server pull request merged
+2021/07/03 12:29:22 Executing script with parameter related **kapsule-server**
+2021/07/03 12:29:22 
+2021/07/03 12:29:22 fork/exec ./update.sh: %1 is not a valid Win32 application.
