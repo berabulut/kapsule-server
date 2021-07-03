@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -38,21 +39,23 @@ type PullRequest struct {
 
 func init() {
 
-	// open log file, create if it doesn't exist
+	// Open log file, create if it doesn't exist
 	f, err = os.OpenFile("/tmp/webhooks.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
 
-	// set write logs to log file
+	// Set write logs to log file
 	wrt := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(wrt)
 
-	// load environment variables
+	// Load environment variables
 	if err := godotenv.Load("../.env"); err != nil {
 		log.Fatal(err)
 	}
 }
+
+// Handle HTTP request
 func HookHandler(folder string) http.HandlerFunc {
 	// Read body
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -71,16 +74,24 @@ func HookHandler(folder string) http.HandlerFunc {
 			return
 		}
 
+		// When kapsule-server repo has merged pull request deploy changes.
 		if folder == "kapsule-server" && body.PR.Merged {
+
 			log.Println("kapsule-server pull request merged")
-			go executeScript(folder)
+
+			queue = append(queue, folder)
+			go executeScript()
 		}
 
+		// When a GitHub action related to kapsule and kapsule-ui succeed deploy changes.
 		if body.Action == "completed" && body.CheckRun.Conclusion == "success" && body.CheckRun.Name == ActionJobName {
 			//command := fmt.Sprintf("./build.sh %s", folder)
 			//cmd, err := exec.Command("./build.sh", folder).Output()
+
 			log.Println("GH action succeeded!")
-			go executeScript(folder)
+
+			queue = append(queue, folder)
+			go executeScript()
 		}
 
 		output, err := json.Marshal(body)
@@ -94,13 +105,24 @@ func HookHandler(folder string) http.HandlerFunc {
 	}
 }
 
-func executeScript(folder string) {
+// Run deployment script while respecting deployment queue.
+func executeScript() {
 
-	log.Printf("Executing script with parameter related **%s**", folder)
+	// We will wait until previous deployment finish
+	for ongoingDeployment() {
+		log.Println("Waiting end of current deployment!")
+		time.Sleep(time.Second)
+	}
 
-	cmd, err := exec.Command("./update.sh", folder).CombinedOutput()
+	log.Printf("Executing script with parameter related **%s**", queue[0])
+	setDeploymentStatus(true)
+
+	cmd, err := exec.Command("./update.sh", queue[0]).CombinedOutput()
 	output := string(cmd)
-	fmt.Println(output)
+	log.Println(output)
+
+	setDeploymentStatus(false)
+	orderQueue()
 
 	if err != nil {
 		log.Fatal(err)
@@ -118,7 +140,7 @@ func main() {
 
 	log.Println("Starting server on address", address)
 
-	// log file
+	// Close log file
 	defer f.Close()
 
 	err := http.ListenAndServe(address, nil)
