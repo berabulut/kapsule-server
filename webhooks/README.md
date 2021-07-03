@@ -7,12 +7,10 @@ Deployment conditions:
 - kapsule:
 
 	- When a GitHub action succeeds (Currently there is only one GH Action)
-	- Commit message in main branch that includes "@[build]"
 
 - kapsule-ui:
 
 	- When a GitHub action succeeds (Currently there is only one GH Action)
-	- Commit message in main branch that includes "@[build]"
 
 - kapsule-server:
 
